@@ -12,3 +12,6 @@ gofmt -s -w ./
 read -s TELE_TOKEN
 export TELE_TOKEN
 ```
+
+## Resources
+- [gopkg.in/telebot.v3](https://gopkg.in/telebot.v3)
