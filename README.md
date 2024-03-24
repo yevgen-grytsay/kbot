@@ -1,4 +1,14 @@
 # kbot
+
+Link [yevhenhrytsai_bot](https://t.me/yevhenhrytsai_bot)
+
+Commands:
+- `/start hello`
+- `/say <message>`
+
+
+## Dev Notes
+
 ```sh
 go build -ldflags="-X="github.com/yevgen-grytsay/kbot/cmd.appVersion=v1.0.0
 ```

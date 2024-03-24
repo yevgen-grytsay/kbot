@@ -42,6 +42,15 @@ to quickly create a Cobra application.`,
 			return
 		}
 
+		kbot.Handle("/say", func(ctx telebot.Context) error {
+			payload := ctx.Message().Payload
+			if payload == "" {
+				return nil
+			}
+
+			return ctx.Send(fmt.Sprintf("Bot says: %s", payload))
+		})
+
 		kbot.Handle(telebot.OnText, func(ctx telebot.Context) error {
 
 			log.Print(ctx.Message().Payload, ctx.Text())
