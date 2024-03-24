@@ -14,4 +14,5 @@ export TELE_TOKEN
 ```
 
 ## Resources
+- [gopkg.in](https://labix.org/gopkg.in)
 - [gopkg.in/telebot.v3](https://gopkg.in/telebot.v3)
