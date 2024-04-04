@@ -110,3 +110,5 @@ go mod edit -go=1.20
 ## Resources
 - [gopkg.in](https://labix.org/gopkg.in)
 - [gopkg.in/telebot.v3](https://gopkg.in/telebot.v3)
+- [Golang: Optional environment variables](https://go.dev/doc/install/source#environment)
+- [Docker: Build variables](https://docs.docker.com/build/building/variables/)
