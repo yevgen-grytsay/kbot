@@ -102,6 +102,11 @@ windows/arm64
 make image TARGETOS=windows TARGETARCH=arm64
 ```
 
+## Змінити версію `go`
+```sh
+go mod edit -go=1.20
+```
+
 ## Resources
 - [gopkg.in](https://labix.org/gopkg.in)
 - [gopkg.in/telebot.v3](https://gopkg.in/telebot.v3)
