@@ -1,10 +1,10 @@
 APP=$(shell basename $(shell git remote get-url origin) .git)
 REGISTRY=yevhenhrytsai
 VERSION=$(shell git describe --tags --abbrev=0)-$(shell git rev-parse --short HEAD)
-TARGETOS=linux
+TARGETOS?=linux
 # TARGETARCH=$(shell dpkg --print-architecture)
 # TARGETARCH=arm64
-TARGETARCH=amd64
+TARGETARCH?=amd64
 
 format:
 	gofmt -s -w ./
@@ -51,7 +51,9 @@ image-tag:
 	echo ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH}
 
 image:
-	docker build . -t ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH}
+	echo "Selected OS: ${TARGETOS}"
+	echo "Selected Arch: ${TARGETARCH}"
+	docker build . -t ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH} --build-arg TARGETARCH=${TARGETARCH} --build-arg TARGETOS=${TARGETOS}
 
 push:
 	docker push ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH}
@@ -63,3 +65,4 @@ push:
 clean:
 	rm -f kbot
 	rm -rf build
+	docker rmi -f ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH}

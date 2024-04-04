@@ -42,7 +42,8 @@ file ./kbot
 ./kbot: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, Go BuildID=difsgrmEqQwNcFjKB23t/zbYpMcL0C92OhTP4i_wq/EKF8uqFXJfxzP95wFk_2/Kfz--gpAmfZnNOn_t9yB, with debug_info, not stripped
 ```
 
-Комбінації `GOOS` та `GOARCH`:
+### Комбінації `GOOS` та `GOARCH`
+[docs](https://go.dev/doc/install/source#environment)
 ```
 $ go tool dist list
 aix/ppc64
@@ -93,6 +94,12 @@ windows/386
 windows/amd64
 windows/arm
 windows/arm64
+```
+
+## Створення образу
+Щоб створити образ для потрібної архітектури, використовуйте змінні `TARGETOS` та `TARGETARCH`. Приклад:
+```sh
+make image TARGETOS=windows TARGETARCH=arm64
 ```
 
 ## Resources
