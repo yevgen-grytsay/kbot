@@ -7,6 +7,14 @@ Commands:
 - `/say <message>`
 
 
+## Cobra CLI
+https://github.com/spf13/cobra-cli
+
+```sh
+~/go/bin/cobra-cli add <new-command>
+
+```
+
 ## Dev Notes
 
 ```sh
