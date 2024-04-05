@@ -1,0 +1,50 @@
+diff --git a/Dockerfile b/Dockerfile
+index d6d1a36..786e1a9 100644
+--- a/Dockerfile
++++ b/Dockerfile
+@@ -1,4 +1,4 @@
+-FROM quay.io/projectquay/golang:1.20 as builder
++FROM --platform=$BUILDPLATFORM quay.io/projectquay/golang:1.20 as builder
+ 
+ ARG TARGETOS
+ ARG TARGETARCH
+@@ -7,7 +7,7 @@ WORKDIR /usr/src/app
+ COPY . .
+ RUN make build TARGETOS=$TARGETOS TARGETARCH=$TARGETARCH
+ 
+-FROM scratch
++FROM scratch as binaries
+ WORKDIR /
+ COPY --from=builder /usr/src/app/kbot .
+ COPY --from=alpine:latest /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
+diff --git a/Makefile b/Makefile
+index d33ebfb..c8750e6 100644
+--- a/Makefile
++++ b/Makefile
+@@ -53,7 +53,11 @@ image-tag:
+ image:
+ 	echo "Selected OS: ${TARGETOS}"
+ 	echo "Selected Arch: ${TARGETARCH}"
+-	docker build . -t ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH} --build-arg TARGETARCH=${TARGETARCH} --build-arg TARGETOS=${TARGETOS}
++	docker build \
++		--target=binaries \
++		--output=bin \
++		--platform=darwin/arm64,darwin/amd64,windows/arm64,windows/amd64,linux/arm64,linux/amd64 \
++		-t ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH} .
+ 
+ push:
+ 	docker push ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH}
+diff --git a/README.md b/README.md
+index 51adf56..44980db 100644
+--- a/README.md
++++ b/README.md
+@@ -111,4 +111,6 @@ go mod edit -go=1.20
+ - [gopkg.in](https://labix.org/gopkg.in)
+ - [gopkg.in/telebot.v3](https://gopkg.in/telebot.v3)
+ - [Golang: Optional environment variables](https://go.dev/doc/install/source#environment)
+-- [Docker: Build variables](https://docs.docker.com/build/building/variables/)
+\ No newline at end of file
++- [Docker: Build variables](https://docs.docker.com/build/building/variables/)
++- [Docker: Multi-platform images | Cross-compilation](https://docs.docker.com/build/building/multi-platform/#cross-compilation)
++- [Docker: Multi-platform | Build using cross-compilation](https://docs.docker.com/build/guide/multi-platform/#build-using-cross-compilation)
+\ No newline at end of file
