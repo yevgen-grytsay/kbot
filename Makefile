@@ -6,6 +6,10 @@ TARGETOS?=linux
 # TARGETARCH=arm64
 TARGETARCH?=amd64
 
+IMAGE_FULL_NAME=${REGISTRY}/${APP}:${VERSION}-${TARGETARCH}
+
+.DEFAULT_GOAL=build
+
 format:
 	gofmt -s -w ./
 
@@ -48,21 +52,23 @@ build-all: linux-arm64 linux-amd64 windows-arm64 windows-amd64 macos-amd64 macos
 # Docker commands
 #
 image-tag:
-	echo ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH}
+	echo ${IMAGE_FULL_NAME}
 
 image:
 	echo "Selected OS: ${TARGETOS}"
 	echo "Selected Arch: ${TARGETARCH}"
-	docker build . -t ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH} --build-arg TARGETARCH=${TARGETARCH} --build-arg TARGETOS=${TARGETOS}
+	docker build . -t ${IMAGE_FULL_NAME} --build-arg TARGETARCH=${TARGETARCH} --build-arg TARGETOS=${TARGETOS}
 
-push:
-	docker push ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH}
+push: dive
+	docker push ${IMAGE_FULL_NAME}
 
+dive:
+	dive --ci --lowestEfficiency=0.9 ${IMAGE_FULL_NAME}
 
 #
 # Misc
 #
 clean:
-	rm -f kbot
-	rm -rf build
-	docker rmi -f ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH}
+	@rm -f kbot
+	@rm -rf build
+	@docker rmi -f ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH}
