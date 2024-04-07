@@ -59,11 +59,14 @@ image:
 	echo "Selected Arch: ${TARGETARCH}"
 	docker build . -t ${IMAGE_FULL_NAME} --build-arg TARGETARCH=${TARGETARCH} --build-arg TARGETOS=${TARGETOS}
 
-push: dive
+push: dive-ci
 	docker push ${IMAGE_FULL_NAME}
 
-dive:
+dive-ci:
 	dive --ci --lowestEfficiency=0.9 ${IMAGE_FULL_NAME}
+
+dive:
+	dive ${IMAGE_FULL_NAME}
 
 #
 # Misc
