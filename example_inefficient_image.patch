@@ -1,0 +1,15 @@
+diff --git a/Dockerfile b/Dockerfile
+index d6d1a36..ad4b080 100644
+--- a/Dockerfile
++++ b/Dockerfile
+@@ -7,8 +7,9 @@ WORKDIR /usr/src/app
+ COPY . .
+ RUN make build TARGETOS=$TARGETOS TARGETARCH=$TARGETARCH
+ 
+-FROM scratch
++FROM ubuntu:22.04
+ WORKDIR /
+ COPY --from=builder /usr/src/app/kbot .
+ COPY --from=alpine:latest /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
++RUN apt-get update && apt-get upgrade -y
+ ENTRYPOINT [ "./kbot" ]

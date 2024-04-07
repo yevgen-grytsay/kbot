@@ -42,6 +42,15 @@ file ./kbot
 ./kbot: ELF 64-bit LSB executable, x86-64, version 1 (SYSV), statically linked, Go BuildID=difsgrmEqQwNcFjKB23t/zbYpMcL0C92OhTP4i_wq/EKF8uqFXJfxzP95wFk_2/Kfz--gpAmfZnNOn_t9yB, with debug_info, not stripped
 ```
 
+
+Щоб зробити імедж неефективним з точки зору наших правил `dive` (`dive --ci --lowestEfficiency=0.9 <image>`):
+```Dockerfile
+FROM ubuntu:22.04
+...
+RUN apt-get update && apt-get upgrade -y
+```
+
+
 ### Комбінації `GOOS` та `GOARCH`
 [docs](https://go.dev/doc/install/source#environment)
 ```
