@@ -116,6 +116,16 @@ make image TARGETOS=windows TARGETARCH=arm64
 go mod edit -go=1.20
 ```
 
+## Kubernetes
+
+```sh
+read -s TELE_TOKEN
+export TELE_TOKEN
+kubectl create secret generic kbot-secret --from-literal=tele-token="$TELE_TOKEN"
+
+kubectl apply -f yaml/kbot.yaml
+```
+
 ## Resources
 - [gopkg.in](https://labix.org/gopkg.in)
 - [gopkg.in/telebot.v3](https://gopkg.in/telebot.v3)

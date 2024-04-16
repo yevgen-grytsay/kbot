@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: kbot
+spec:
+  containers:
+    - name: kbot
+      image: us-central1-docker.pkg.dev/savvy-camp-419217/k8s-k3s/kbot:v1.0.1-0b96804-amd64
+      command: ["./kbot", "start"]
+      env:
+        - name: TELE_TOKEN
+          valueFrom:
+            secretKeyRef:
+              name: kbot-secret
+              key: tele-token
