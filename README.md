@@ -119,16 +119,30 @@ go mod edit -go=1.20
 ## Kubernetes
 
 ```sh
+k3d cluster create kbot-cluster --registry-config /home/yevhen/.k3d/registries.yaml
+
+
 read -s TELE_TOKEN
 export TELE_TOKEN
 kubectl create secret generic kbot-secret --from-literal=tele-token="$TELE_TOKEN"
 
 kubectl apply -f yaml/kbot.yaml
+
+kubectl exec -i -t kbot -- /bin/sh -c 'echo $TELE_TOKEN'
 ```
 
 ## Helm
 ```sh
 $ helm create helm
+```
+`1.1.1.1` -- DNS від Cloudflare
+
+```sh
+k3d cluster create kbot-cluster \
+    --registry-config /home/yevhen/.k3d/registries.yaml \
+    --agents=3
+
+helm install kbot-init ./helm/ --set secret.tokenValue=$(echo $TELE_TOKEN | tr -d '\n' | base64)
 ```
 
 ## Resources
@@ -136,3 +150,4 @@ $ helm create helm
 - [gopkg.in/telebot.v3](https://gopkg.in/telebot.v3)
 - [Golang: Optional environment variables](https://go.dev/doc/install/source#environment)
 - [Docker: Build variables](https://docs.docker.com/build/building/variables/)
+- [Kubernetes | Define container environment variables using Secret data](https://kubernetes.io/docs/tasks/inject-data-application/distribute-credentials-secure/#define-container-environment-variables-using-secret-data)

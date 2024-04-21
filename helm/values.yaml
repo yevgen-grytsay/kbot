@@ -5,7 +5,16 @@
 replicaCount: 1
 
 image:
-  repository: nginx
+  repository: yevhenhrytsai/kbot
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: ""
+  tag: "v1.0.1-0b96804-amd64"
+
+secret:
+  name: kbot-secret
+  tokenKey: token
+  tokenName: TELE_TOKEN
+  tokenValue:
+
+autoscaling:
+  enabled: false
