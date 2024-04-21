@@ -5,10 +5,11 @@
 replicaCount: 1
 
 image:
-  repository: yevhenhrytsai/kbot
+  repository: yevhenhrytsai
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "v1.0.1-0b96804-amd64"
+  tag: "v1.0.1-0b96804"
+  arch: amd64
 
 secret:
   name: kbot-secret
