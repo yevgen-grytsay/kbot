@@ -42,3 +42,22 @@ $ helm ls
 NAME            NAMESPACE       REVISION        UPDATED                                         STATUS          CHART           APP VERSION
 kbot-init       kbot            2               2024-04-21 16:03:59.204850282 +0300 EEST        deployed        kbot-0.1.0      1.16.0
 ```
+
+## Create Github release
+```sh
+$ gh release create
+https://github.com/yevgen-grytsay/kbot/releases/tag/v1.0.2
+
+
+$ gh release list
+TITLE   TYPE    TAG NAME  PUBLISHED             
+v1.0.2  Latest  v1.0.2    less than a minute ago
+
+
+$ helm package ./helm/
+Successfully packaged chart and saved it to: /home/yevhen/Dev/Prometheus DevOps/kbot/kbot-0.1.1.tgz
+
+
+$ gh release upload v1.0.2 kbot-0.1.1.tgz
+Successfully uploaded 1 asset to v1.0.2
+```
