@@ -126,6 +126,11 @@ kubectl create secret generic kbot-secret --from-literal=tele-token="$TELE_TOKEN
 kubectl apply -f yaml/kbot.yaml
 ```
 
+## Helm
+```sh
+$ helm create helm
+```
+
 ## Resources
 - [gopkg.in](https://labix.org/gopkg.in)
 - [gopkg.in/telebot.v3](https://gopkg.in/telebot.v3)
