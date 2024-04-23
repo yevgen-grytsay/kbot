@@ -42,3 +42,4 @@ go test ./...
 - [Docker: Build variables](https://docs.docker.com/build/building/variables/)
 - [Kubernetes | Define container environment variables using Secret data](https://kubernetes.io/docs/tasks/inject-data-application/distribute-credentials-secure/#define-container-environment-variables-using-secret-data)
 - [Docker login-action](https://github.com/docker/login-action)
+- [GitHub Actions | Defining access for the `GITHUB_TOKEN` scopes](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#defining-access-for-the-github_token-scopes-1)
