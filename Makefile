@@ -6,7 +6,7 @@ TARGETOS?=linux
 # TARGETARCH=arm64
 TARGETARCH?=amd64
 
-IMAGE_FULL_NAME=${REGISTRY}/${APP}:${VERSION}-${TARGETARCH}
+IMAGE_FULL_NAME=${REGISTRY}/${APP}:${VERSION}-${TARGETOS}-${TARGETARCH}
 
 .DEFAULT_GOAL=build
 
@@ -57,8 +57,8 @@ image-tag:
 	@echo ${IMAGE_FULL_NAME}
 
 image:
-	echo "Selected OS: ${TARGETOS}"
-	echo "Selected Arch: ${TARGETARCH}"
+	@echo "Selected OS: ${TARGETOS}"
+	@echo "Selected Arch: ${TARGETARCH}"
 	docker build . -t ${IMAGE_FULL_NAME} --build-arg TARGETARCH=${TARGETARCH} --build-arg TARGETOS=${TARGETOS}
 
 push:
