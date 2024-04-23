@@ -10,6 +10,8 @@ IMAGE_FULL_NAME=${REGISTRY}/${APP}:${VERSION}-${TARGETARCH}
 
 .DEFAULT_GOAL=build
 
+.PHONY: helm
+
 format:
 	gofmt -s -w ./
 
@@ -17,7 +19,7 @@ lint:
 	go vet
 
 test:
-	go test -v
+	go test -v ./...
 
 get:
 	go get
@@ -67,6 +69,9 @@ dive-ci:
 
 dive:
 	dive ${IMAGE_FULL_NAME}
+
+helm:
+	helm package ./helm
 
 #
 # Misc
