@@ -4,7 +4,7 @@ Link [yevhenhrytsai_bot](https://t.me/yevhenhrytsai_bot)
 
 Commands:
 - `/start hello`
-- `/say <message>`
+- `/echo <message>`
 
 
 ## Cobra CLI
@@ -18,7 +18,7 @@ https://github.com/spf13/cobra-cli
 ## Dev Notes
 
 ```sh
-go build -ldflags="-X="github.com/yevgen-grytsay/kbot/cmd.appVersion=v1.0.0
+go build -ldflags="-X="github.com/yevgen-grytsay/kbot/app.AppVersion=v1.0.0
 ```
 
 ```sh
