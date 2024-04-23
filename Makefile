@@ -54,14 +54,14 @@ build: format get
 # Docker commands
 #
 image-tag:
-	echo ${IMAGE_FULL_NAME}
+	@echo ${IMAGE_FULL_NAME}
 
 image:
 	echo "Selected OS: ${TARGETOS}"
 	echo "Selected Arch: ${TARGETARCH}"
 	docker build . -t ${IMAGE_FULL_NAME} --build-arg TARGETARCH=${TARGETARCH} --build-arg TARGETOS=${TARGETOS}
 
-push: dive-ci
+push:
 	docker push ${IMAGE_FULL_NAME}
 
 dive-ci:
