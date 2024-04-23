@@ -29,12 +29,12 @@ jobs:
       - name: Build
         run: make image
 
-      - name: Image full name
-        id: image-full-name
-        run: echo "name=$(make image-tag)" >> "$GITHUB_ENV"
+      # - name: Image full name
+      #   id: image-full-name
+      #   run: echo "name=$(make image-tag)" >> "$GITHUB_ENV"
 
-      - name: Dive
-        uses: ${{ steps.image-full-name.name }}
+      # - name: Dive
+      #   uses: ${{ steps.image-full-name.name }}
 
       - name: Build and push
-        run: make image push
+        run: make push
