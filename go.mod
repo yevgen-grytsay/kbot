@@ -4,6 +4,7 @@ go 1.20
 
 require (
 	github.com/spf13/cobra v1.8.0
+	go.uber.org/mock v0.4.0
 	gopkg.in/telebot.v3 v3.2.1
 )
 
