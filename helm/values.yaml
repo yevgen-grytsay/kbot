@@ -7,7 +7,7 @@ image:
   repository: yevhenhrytsai
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "v2.0.0-5e9e008"
+  tag: "v2.0.0-fd43696"
   arch: amd64
 secret:
   name: kbot-secret
