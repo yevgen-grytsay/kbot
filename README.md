@@ -41,3 +41,4 @@ go test ./...
 - [Golang: Optional environment variables](https://go.dev/doc/install/source#environment)
 - [Docker: Build variables](https://docs.docker.com/build/building/variables/)
 - [Kubernetes | Define container environment variables using Secret data](https://kubernetes.io/docs/tasks/inject-data-application/distribute-credentials-secure/#define-container-environment-variables-using-secret-data)
+- [Docker login-action](https://github.com/docker/login-action)
