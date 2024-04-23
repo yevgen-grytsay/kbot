@@ -29,12 +29,35 @@ jobs:
       - name: Build
         run: make image
 
-      # - name: Image full name
-      #   id: image-full-name
-      #   run: echo "name=$(make image-tag)" >> "$GITHUB_ENV"
+      - name: Image full name
+        id: image-full-name
+        run: echo "name=$(make image-tag)" >> "$GITHUB_OUTPUT"
 
-      # - name: Dive
-      #   uses: ${{ steps.image-full-name.name }}
+      - name: Dive
+        uses: ${{ steps.image-full-name.name }}
 
-      - name: Build and push
+      - name: Push
         run: make push
+
+  cd:
+    name: CD
+    needs: ci
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # we need full history with tags
+
+      - run: echo "VERSION=$(git describe --tags --abbrev=0)-$(git rev-parse --short HEAD)" >> "$GITHUB_ENV"
+
+      - uses: mikefarah/yq@v4.43.1
+        with:
+          cmd: yq -i '.image.tag=strenv(VERSION)' helm/values.yaml
+
+      - run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git commit -am "update version $VERSION"
+          git push
