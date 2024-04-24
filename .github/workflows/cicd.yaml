@@ -11,12 +11,13 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      APP: kbot
-      REGISTRY: ${{ secrets.GAR_REGISTRY }}
+      # APP: kbot
+      REGISTRY: ghcr.io
+      IMAGE_NAME: ${{ github.repository }}
 
     permissions:
-      contents: "read"
-      id-token: "write"
+      contents: read
+      packages: write
 
     steps:
       - name: Check out repository code
@@ -27,30 +28,15 @@ jobs:
       - name: Run test
         run: make test
 
-      - name: Authenticate to Google Cloud
-        id: auth
-        uses: google-github-actions/auth@v2
-        with:
-          token_format: access_token
-          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
-
-      - name: Login to GAR
+      - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
-          registry: ${{ secrets.GAR_REGISTRY }}
-          username: oauth2accesstoken
-          password: ${{ steps.auth.outputs.access_token }}
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
         run: make image
-
-      # - name: Image full name
-      #   id: image-full-name
-      #   run: echo "name=$(make image-tag)" >> "$GITHUB_OUTPUT"
-
-      # - name: Dive
-      #   uses: ${{ steps.image-full-name.name }}
 
       - name: Push
         run: make push

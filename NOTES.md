@@ -199,6 +199,42 @@ $ mockgen gopkg.in/telebot.v3 Context > tests/telebot_mocks.go
 ```
 
 
+## Dive CI/CD
+```yaml
+- name: Image full name
+    id: image-full-name
+    run: echo "name=$(make image-tag)" >> "$GITHUB_OUTPUT"
+
+- name: Dive
+    uses: ${{ steps.image-full-name.name }}
+```
+
+
+##
+```yaml
+jobs:
+  ci:
+    permissions:
+      contents: "read"
+      id-token: "write"
+    
+    steps:
+      - name: Authenticate to Google Cloud
+        id: auth
+        uses: google-github-actions/auth@v2
+        with:
+          token_format: access_token
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+
+      - name: Login to GAR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.GAR_REGISTRY }}
+          username: oauth2accesstoken
+          password: ${{ steps.auth.outputs.access_token }}
+```
+
 ## References
 
 https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect#understanding-the-oidc-token

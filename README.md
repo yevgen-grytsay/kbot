@@ -57,6 +57,7 @@ make test
 - [Workflow syntax | `permissions`](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#permissions)
 - [Defining access for the `GITHUB_TOKEN` scopes](https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#defining-access-for-the-github_token-scopes-1)
 -[Running your workflow only when a push to specific branches occurs](https://docs.github.com/en/actions/using-workflows/events-that-trigger-workflows#running-your-workflow-only-when-a-push-to-specific-branches-occurs)
+- [Publishing and installing a package with GitHub Actions](https://docs.github.com/en/packages/managing-github-packages-using-github-actions-workflows/publishing-and-installing-a-package-with-github-actions)
 
 
 ### ArgoC

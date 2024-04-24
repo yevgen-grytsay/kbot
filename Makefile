@@ -1,4 +1,4 @@
-APP=$(shell basename $(shell git remote get-url origin) .git)
+IMAGE_NAME?=$(shell basename $(shell git remote get-url origin) .git)
 REGISTRY?=yevhenhrytsai
 VERSION=$(shell git describe --tags --abbrev=0)-$(shell git rev-parse --short HEAD)
 TARGETOS?=linux
@@ -6,7 +6,7 @@ TARGETOS?=linux
 # TARGETARCH=arm64
 TARGETARCH?=amd64
 
-IMAGE_FULL_NAME=${REGISTRY}/${APP}:${VERSION}-${TARGETOS}-${TARGETARCH}
+IMAGE_FULL_NAME=${REGISTRY}/${IMAGE_NAME}:${VERSION}-${TARGETOS}-${TARGETARCH}
 
 .DEFAULT_GOAL=build
 
