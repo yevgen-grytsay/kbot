@@ -4,13 +4,15 @@
 
 replicaCount: 1
 image:
-  registry: us-central1-docker.pkg.dev
-  repository: savvy-camp-419217/k8s-k3s
+  registry: ghcr.io
+  repository: yevgen-grytsay/kbot
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "v2.0.0-7c58d46"
   arch: amd64
   os: linux
+  # registry: us-central1-docker.pkg.dev
+  # repository: savvy-camp-419217/k8s-k3s
 secret:
   name: kbot-secret
   tokenKey: token
