@@ -5,7 +5,7 @@
 replicaCount: 1
 image:
   registry: ghcr.io
-  repository: yevgen-grytsay/kbot
+  repository: yevgen-grytsay
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
   tag: "v2.0.0-4213a79"
