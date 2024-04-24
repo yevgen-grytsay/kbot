@@ -8,7 +8,7 @@ image:
   repository: savvy-camp-419217/k8s-k3s
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "v2.0.0-e2aefaf"
+  tag: "v2.0.0-7c58d46"
   arch: amd64
   os: linux
 secret:
