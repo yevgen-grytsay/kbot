@@ -12,7 +12,7 @@ jobs:
 
     env:
       APP: kbot
-      REGISTRY: ${{ secrets.DOCKERHUB_USERNAME }}
+      REGISTRY: ${{ secrets.GAR_REGISTRY }}
 
     permissions:
       contents: "read"
@@ -32,13 +32,13 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           token_format: access_token
-          workload_identity_provider: "projects/641574416153/locations/global/workloadIdentityPools/github/providers/kbot-repo"
-          service_account: "github-service-account@savvy-camp-419217.iam.gserviceaccount.com"
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
 
       - name: Login to GAR
         uses: docker/login-action@v3
         with:
-          registry: us-central1-docker.pkg.dev
+          registry: ${{ secrets.GAR_REGISTRY }}
           username: oauth2accesstoken
           password: ${{ steps.auth.outputs.access_token }}
 

@@ -79,4 +79,4 @@ helm:
 clean:
 	@rm -f kbot
 	@rm -rf build
-	@docker rmi -f ${REGISTRY}/${APP}:${VERSION}-${TARGETARCH}
+	@docker rmi -f ${IMAGE_FULL_NAME}
