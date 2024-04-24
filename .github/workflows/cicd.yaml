@@ -1,6 +1,9 @@
 name: KBOT-CICD
 
-on: push
+on:
+  push:
+    branches:
+      - "develop"
 
 jobs:
   ci:
@@ -8,8 +11,13 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      APP: kbot
-      REGISTRY: ${{ secrets.DOCKERHUB_USERNAME }}
+      # APP: kbot
+      REGISTRY: ghcr.io
+      IMAGE_NAME: ${{ github.repository }}
+
+    permissions:
+      contents: read
+      packages: write
 
     steps:
       - name: Check out repository code
@@ -20,21 +28,15 @@ jobs:
       - name: Run test
         run: make test
 
-      - name: Login to Docker Hub
+      - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Build
         run: make image
-
-      # - name: Image full name
-      #   id: image-full-name
-      #   run: echo "name=$(make image-tag)" >> "$GITHUB_OUTPUT"
-
-      # - name: Dive
-      #   uses: ${{ steps.image-full-name.name }}
 
       - name: Push
         run: make push
