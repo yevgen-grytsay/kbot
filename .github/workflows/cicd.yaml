@@ -14,6 +14,10 @@ jobs:
       APP: kbot
       REGISTRY: ${{ secrets.DOCKERHUB_USERNAME }}
 
+    permissions:
+      contents: "read"
+      id-token: "write"
+
     steps:
       - name: Check out repository code
         uses: actions/checkout@v4
