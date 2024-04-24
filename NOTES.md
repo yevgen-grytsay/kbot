@@ -197,3 +197,17 @@ go.uber.org/mock v0.4.0
 
 $ mockgen gopkg.in/telebot.v3 Context > tests/telebot_mocks.go
 ```
+
+
+## References
+
+https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect#understanding-the-oidc-token
+
+
+https://cloud.google.com/iam/docs/workload-identity-federation#mapping
+
+
+https://github.com/google-github-actions/auth/blob/main/docs/SECURITY_CONSIDERATIONS.md
+
+
+https://cloud.google.com/iam/docs/overview?hl=en
