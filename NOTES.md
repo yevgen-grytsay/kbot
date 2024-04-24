@@ -174,7 +174,7 @@ k3d cluster create kbot-cluster --registry-config /home/yevhen/.k3d/registries.y
 
 read -s TELE_TOKEN
 export TELE_TOKEN
-kubectl create secret generic kbot-secret --from-literal=tele-token="$TELE_TOKEN"
+kubectl create secret generic kbot-secret --from-literal=token="$TELE_TOKEN"
 
 kubectl apply -f yaml/kbot.yaml
 
