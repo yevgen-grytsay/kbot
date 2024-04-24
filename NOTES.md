@@ -210,7 +210,90 @@ $ mockgen gopkg.in/telebot.v3 Context > tests/telebot_mocks.go
 ```
 
 
-##
+## Configure the workload identity federation for GitHub Actions in Google Cloud
+
+Docs:
+- [Workload Identity Federation through a Service Account](https://github.com/google-github-actions/auth#workload-identity-federation-through-a-service-account)
+- [Examples | Workload Identity Federation through a Service Account](https://github.com/google-github-actions/auth/blob/main/docs/EXAMPLES.md#workload-identity-federation-through-a-service-account)
+- [Security Considerations](https://github.com/google-github-actions/auth/blob/main/docs/SECURITY_CONSIDERATIONS.md)
+
+Далі йдуть кроки з [документації](https://github.com/google-github-actions/auth#workload-identity-federation-through-a-service-account) з моїми правками.
+
+1. Create a Google Cloud Service Account.
+```sh
+PROJECT_ID=my-project-id
+
+$ gcloud iam service-accounts create "github-service-account" \
+    --project "${PROJECT_ID}"
+```
+
+2. Create a Workload Identity Pool:
+```sh
+gcloud iam workload-identity-pools create "github" \
+    --project="${PROJECT_ID}" \
+    --location="global" \
+    --display-name="GitHub Actions Pool"
+```
+
+
+3. Get the full ID of the Workload Identity Pool:
+```sh
+gcloud iam workload-identity-pools describe "github" \
+    --project="${PROJECT_ID}" \
+    --location="global" \
+    --format="value(name)"
+```
+
+4. Create a Workload Identity Provider in that pool:
+[Security Considerations](https://github.com/google-github-actions/auth/blob/main/docs/SECURITY_CONSIDERATIONS.md)
+
+Щоб отримати id репозиторію та id власника репозиторію:
+```sh
+curl -L \
+    -H "Accept: application/vnd.github+json" \
+    -H "X-GitHub-Api-Version: 2022-11-28" \
+    https://api.github.com/repos/yevgen-grytsay/kbot | jq .id,.owner.id
+```
+
+В наступній команді я змінив значення `--attribute-mapping` та `--attribute-condition`.
+- до `--attribute-condition` додав рекомендовані перевірки ([Security Considerations](https://github.com/google-github-actions/auth/blob/main/docs/SECURITY_CONSIDERATIONS.md)).
+- до `--attribute-mapping` додав мапінг `attribute.repository_id=assertion.repository_id` для того, щоб в `--attribute-condition` можна було використовувати цей параметр `assertion.repository_id`
+
+> ❗️ IMPORTANT You must map any claims in the incoming token to attributes before you can assert on those attributes in a CEL expression or IAM policy!
+
+Створити Workload Identity Provider:
+```sh
+gcloud iam workload-identity-pools providers create-oidc "kbot-repo" \
+    --project="${PROJECT_ID}" \
+    --location="global" \
+    --workload-identity-pool="github" \
+    --display-name="My GitHub repo Provider" \
+    --attribute-mapping="google.subject=assertion.sub,attribute.actor=assertion.actor,attribute.repository=assertion.repository,attribute.repository_owner_id=assertion.repository_owner_id,attribute.repository_id=assertion.repository_id" \
+    --attribute-condition="assertion.repository_owner_id == '675875' && assertion.repository_id == '776821562'" \
+    --issuer-uri="https://token.actions.githubusercontent.com"
+```
+
+5. Allow authentications from the Workload Identity Pool to your Google Cloud Service Account.
+```sh
+WORKLOAD_IDENTITY_POOL_ID=my-workload-pool-id
+REPO="yevgen-grytsay/kbot"
+
+gcloud iam service-accounts add-iam-policy-binding "github-service-account@${PROJECT_ID}.iam.gserviceaccount.com" \
+    --project="${PROJECT_ID}" \
+    --role="roles/iam.workloadIdentityUser" \
+    --member="principalSet://iam.googleapis.com/${WORKLOAD_IDENTITY_POOL_ID}/attribute.repository/${REPO}"
+```
+
+6. Extract the Workload Identity Provider resource name:
+```sh
+gcloud artifacts repositories add-iam-policy-binding "k8s-k3s" \
+    --project="${PROJECT_ID}" \
+    --role="roles/artifactregistry.writer" \
+    --member="serviceAccount:github-service-account@${PROJECT_ID}.iam.gserviceaccount.com" \
+    --location=us-central1
+```
+
+
 ```yaml
 jobs:
   ci:
@@ -224,8 +307,8 @@ jobs:
         uses: google-github-actions/auth@v2
         with:
           token_format: access_token
-          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }}
-          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }}
+          workload_identity_provider: ${{ secrets.GCP_WORKLOAD_IDENTITY_PROVIDER }} # "projects/123456789/locations/global/workloadIdentityPools/github/providers/kbot-repo"
+          service_account: ${{ secrets.GCP_SERVICE_ACCOUNT }} # github-service-account@my-project.iam.gserviceaccount.com
 
       - name: Login to GAR
         uses: docker/login-action@v3
