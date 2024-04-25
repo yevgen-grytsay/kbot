@@ -6,13 +6,17 @@ pipeline {
         choice(name: 'ARCH', choices: ['arm64', 'amd64'], description: 'Pick Arch')
 
     }
-    stages {
-        stage('Prepare') {
-            steps {
-                echo "Build for platform ${params.OS}"
-                echo "Build for arch: ${params.ARCH}"
 
-                sh "TARGETOS=${params.OS} TARGETARCH=${params.ARCH}"
+    environment {
+        TARGETOS="${params.OS}"
+        TARGETARCH="${params.ARCH}"
+    }
+
+    stages {
+        stage('Info') {
+            steps {
+                echo "Build for platform ${TARGETOS}"
+                echo "Build for arch: ${TARGETARCH}"
             }
         }
 
