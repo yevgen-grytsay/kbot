@@ -27,7 +27,8 @@ get:
 #
 # Build commands
 #
-build: format get
+# build: format get # temporarily disable
+build: get
 	CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -v -o kbot -ldflags="-X="github.com/yevgen-grytsay/kbot/app.AppVersion=${VERSION}
 
 # linux-arm64:
