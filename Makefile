@@ -12,8 +12,8 @@ IMAGE_FULL_NAME=${REGISTRY}/${IMAGE_NAME}:${VERSION}-${TARGETOS}-${TARGETARCH}
 
 .PHONY: helm
 
-format:
-	gofmt -s -w ./
+# format:
+# 	gofmt -s -w ./
 
 lint:
 	go vet
