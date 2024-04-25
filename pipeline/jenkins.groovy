@@ -7,12 +7,12 @@ pipeline {
 
     }
     stages {
-        stage('Example') {
+        stage('Prepare') {
             steps {
                 echo "Build for platform ${params.OS}"
-
                 echo "Build for arch: ${params.ARCH}"
 
+                sh "TARGETOS=${params.OS} TARGETARCH=${params.ARCH}"
             }
         }
 
@@ -29,10 +29,27 @@ pipeline {
             }
         }
 
+        stage('make build') {
+            steps {
+                echo 'Make build'
+                sh "make build"
+            }
+        }
+
         stage('make image') {
             steps {
                 echo 'Make image'
-                sh "TARGETOS=${params.OS} TARGETARCH=${params.ARCH} make image"
+                sh "make image"
+            }
+        }
+
+        stage('push image') {
+            steps {
+                script {
+                    docker.withRegistry('', 'dockerhub-credentials') {
+                        sh 'make push'
+                    }
+                }
             }
         }
     }
