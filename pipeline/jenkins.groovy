@@ -20,5 +20,12 @@ pipeline {
                 git branch: 'main', url: 'https://github.com/yevgen-grytsay/kbot.git'
             }
         }
+
+        stage('test') {
+            steps {
+                echo 'Testing'
+                sh 'make test'
+            }
+        }
     }
 }
