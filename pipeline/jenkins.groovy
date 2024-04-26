@@ -33,19 +33,24 @@ pipeline {
             }
         }
 
-        stage('make build') {
-            steps {
-                echo 'Make build'
-                sh "make build"
-            }
-        }
+        stage('Parallel build and make image') {
+            parallel {
+                stage('make build') {
+                    steps {
+                        echo 'Make build'
+                        sh "make build"
+                    }
+                }
 
-        stage('make image') {
-            steps {
-                echo 'Make image'
-                sh "make image"
+                stage('make image') {
+                    steps {
+                        echo 'Make image'
+                        sh "make image"
+                    }
+                }
             }
         }
+        
 
         stage('push image') {
             steps {
