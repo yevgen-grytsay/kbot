@@ -318,6 +318,20 @@ jobs:
           password: ${{ steps.auth.outputs.access_token }}
 ```
 
+## Jenkins
+
+apt install default-jre
+
+go, gofmt in PATH
+
+Plugins:
+- SSH Build Agents plugin
+- Docker Pipeline
+
+Allow user jenkins to run docker commands:
+https://docs.docker.com/engine/install/linux-postinstall/
+
+
 ## References
 
 https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect#understanding-the-oidc-token
