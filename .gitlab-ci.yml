@@ -18,24 +18,33 @@ variables:
       - "amd64"
       - "arm64"
     description: "Pick Arch"
+  GO_IMAGE: quay.io/projectquay/golang:1.20
 
 test_job:
   stage: test
+  image: $GO_IMAGE
+  # when: manual
+  # allow_failure: false
   script:
     - "make test"
 
 build_job:
+  image: $GO_IMAGE
   stage: build
+  needs: [test_job]
   script:
     - "make build"
 
 image_job:
+  image: docker:26.1.0-cli-alpine3.19
   stage: build
+  needs: [test_job]
+  services:
+    - docker:26.1.0-dind
+  before_script:
+    - apk add --no-cache make
+    - apk add --no-cache git
+    - docker login -u $DOCKERHUB_USER -p $DOCKERHUB_TOKEN
   script:
     - "make image"
-
-push_job:
-  stage: push
-  script:
-    - "docker login -u $DOCKERHUB_USER --password-stdin <<<$DOCKERHUB_TOKEN"
     - "make push"

@@ -1,16 +1,34 @@
 IMAGE_NAME?=$(shell basename $(shell git remote get-url origin) .git)
 REGISTRY?=yevhenhrytsai
-VERSION=$(shell git describe --tags --abbrev=0)-$(shell git rev-parse --short HEAD)
+VERSION_TAG=$(shell git describe --tags --abbrev=0)
+VERSION_REV=$(shell git rev-parse --short HEAD)
 TARGETOS?=linux
 # TARGETARCH=$(shell dpkg --print-architecture)
 # TARGETARCH=arm64
 TARGETARCH?=amd64
 
+# Fail fast
+ifndef VERSION_TAG
+$(error VERSION_TAG is not set)
+endif
+
+ifndef VERSION_REV
+$(error VERSION_TAG is not set)
+endif
+
+ifndef TARGETOS
+$(error TARGETOS is not set)
+endif
+
+ifndef TARGETARCH
+$(error TARGETARCH is not set)
+endif
+
+VERSION=${VERSION_TAG}-${VERSION_REV}
 IMAGE_FULL_NAME=${REGISTRY}/${IMAGE_NAME}:${VERSION}-${TARGETOS}-${TARGETARCH}
 
 .DEFAULT_GOAL=build
 
-.PHONY: helm
 
 # format:
 # 	gofmt -s -w ./
@@ -71,6 +89,7 @@ dive-ci:
 dive:
 	dive ${IMAGE_FULL_NAME}
 
+.PHONY: helm
 helm:
 	helm package ./helm
 
