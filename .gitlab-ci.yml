@@ -1,0 +1,41 @@
+stages:
+  - test
+  - build
+  - push
+
+variables:
+  OS:
+    value: "linux"
+    options:
+      - "linux"
+      - "darwin"
+      - "windows"
+      - "all"
+    description: "Pick OS"
+  ARCH:
+    value: "amd64"
+    options:
+      - "amd64"
+      - "arm64"
+    description: "Pick Arch"
+
+test_job:
+  stage: test
+  script:
+    - "make test"
+
+build_job:
+  stage: build
+  script:
+    - "make build"
+
+image_job:
+  stage: build
+  script:
+    - "make image"
+
+push_job:
+  stage: push
+  script:
+    - "docker login -u $DOCKERHUB_USER --password-stdin <<<$DOCKERHUB_TOKEN"
+    - "make push"
