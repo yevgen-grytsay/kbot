@@ -11,20 +11,20 @@ variables:
       - "darwin"
       - "windows"
       - "all"
-    description: "Pick OS"
+    description: "Pick OS: `linux`, `darwin`, `windows`, `all`"
   ARCH:
     value: "amd64"
     options:
       - "amd64"
       - "arm64"
-    description: "Pick Arch"
+    description: "Pick Arch: `amd64`, `arm64`"
   GO_IMAGE: quay.io/projectquay/golang:1.20
 
 test_job:
   stage: test
   image: $GO_IMAGE
-  # when: manual
-  # allow_failure: false
+  when: manual
+  allow_failure: false
   script:
     - "make test"
 
@@ -39,11 +39,28 @@ image_job:
   image: docker:26.1.0-cli-alpine3.19
   stage: build
   needs: [test_job]
+  variables:
+    TARGETOS: $OS
+    TARGETARCH: $ARCH
   services:
     - docker:26.1.0-dind
   before_script:
     - apk add --no-cache make
     - apk add --no-cache git
+    - echo $DOCKERHUB_TOKEN | docker login -u $DOCKERHUB_USER --password-stdin
+  script:
+    - "make image"
+    - "make push"
+
+test_runner_job:
+  stage: build
+  needs: [test_job]
+  tags:
+    - docker
+  variables:
+    TARGETOS: $OS
+    TARGETARCH: $ARCH
+  before_script:
     - echo $DOCKERHUB_TOKEN | docker login -u $DOCKERHUB_USER --password-stdin
   script:
     - "make image"
