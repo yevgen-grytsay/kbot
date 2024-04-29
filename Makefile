@@ -1,19 +1,46 @@
 IMAGE_NAME?=$(shell basename $(shell git remote get-url origin) .git)
 REGISTRY?=yevhenhrytsai
-VERSION=$(shell git describe --tags --abbrev=0)-$(shell git rev-parse --short HEAD)
+VERSION_TAG=$(shell git describe --tags --abbrev=0)
+VERSION_REV=$(shell git rev-parse --short HEAD)
 TARGETOS?=linux
 # TARGETARCH=$(shell dpkg --print-architecture)
 # TARGETARCH=arm64
 TARGETARCH?=amd64
 
-IMAGE_FULL_NAME=${REGISTRY}/${IMAGE_NAME}:${VERSION}-${TARGETOS}-${TARGETARCH}
+# ALL_OS = linux darwin windows
+# ifeq ($(TARGETOS),all)
+# 	TARGETOS_LIST=$(ALL_OS)
+# else
+# 	TARGETOS_LIST=$(TARGETOS)
+# endif
+# build_jobs := $(foreach os,$(TARGETOS_LIST),build-$(os)-$(TARGETARCH))
+# TARGETOS := $(firstword $(TARGETOS_LIST))
+
+# Fail fast
+ifndef VERSION_TAG
+$(error VERSION_TAG is not set)
+endif
+
+ifndef VERSION_REV
+$(error VERSION_TAG is not set)
+endif
+
+ifndef TARGETOS
+$(error TARGETOS is not set)
+endif
+
+ifndef TARGETARCH
+$(error TARGETARCH is not set)
+endif
+
+VERSION=$(VERSION_TAG)-$(VERSION_REV)
+IMAGE_FULL_NAME=$(REGISTRY)/$(IMAGE_NAME):$(VERSION)-$(TARGETOS)-$(TARGETARCH)
 
 .DEFAULT_GOAL=build
 
-.PHONY: helm
 
-# format:
-# 	gofmt -s -w ./
+format:
+	gofmt -s -w ./
 
 lint:
 	go vet
@@ -27,29 +54,23 @@ get:
 #
 # Build commands
 #
-# build: format get # temporarily disable
-build: get
-	CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} go build -v -o kbot -ldflags="-X="github.com/yevgen-grytsay/kbot/app.AppVersion=${VERSION}
+build: format get
+	@echo "Selected OS: ${TARGETOS}"
+	@echo "Selected Arch: ${TARGETARCH}"
+	CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} \
+		go build -v -o kbot \
+		-ldflags="-X="github.com/yevgen-grytsay/kbot/app.AppVersion=${VERSION}
 
-# linux-arm64:
-# 	CGO_ENABLED=0 GOOS=linux GOARCH=arm64 go build -v -o ./build/linux-arm64/kbot -ldflags="-X="github.com/yevgen-grytsay/kbot/cmd.appVersion=${VERSION}
+# build: get
+# 	@echo "Selected OS: ${TARGETOS_LIST}"
+# 	@echo "Selected Arch: ${TARGETARCH}"
+# 	$(foreach os, $(TARGETOS_LIST), \
+# 		CGO_ENABLED=0 GOOS=${os} GOARCH=${TARGETARCH} go build -v -o build/${os}-${TARGETARCH}/kbot -ldflags="-X="github.com/yevgen-grytsay/kbot/app.AppVersion=${VERSION}; \
+# 	)
 
-# linux-amd64:
-# 	CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -v -o ./build/linux-amd64/kbot -ldflags="-X="github.com/yevgen-grytsay/kbot/cmd.appVersion=${VERSION}
-
-# windows-arm64:
-# 	CGO_ENABLED=0 GOOS=windows GOARCH=arm64 go build -v -o ./build/windows-arm64/kbot -ldflags="-X="github.com/yevgen-grytsay/kbot/cmd.appVersion=${VERSION}
-
-# windows-amd64:
-# 	CGO_ENABLED=0 GOOS=windows GOARCH=amd64 go build -v -o ./build/windows-amd64/kbot -ldflags="-X="github.com/yevgen-grytsay/kbot/cmd.appVersion=${VERSION}
-
-# macos-amd64:
-# 	CGO_ENABLED=0 GOOS=darwin GOARCH=amd64 go build -v -o ./build/macos-amd64/kbot -ldflags="-X="github.com/yevgen-grytsay/kbot/cmd.appVersion=${VERSION}
-
-# macos-arm64:
-# 	CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 go build -v -o ./build/macos-arm64/kbot -ldflags="-X="github.com/yevgen-grytsay/kbot/cmd.appVersion=${VERSION}
-
-# build-all: linux-arm64 linux-amd64 windows-arm64 windows-amd64 macos-amd64 macos-arm64
+# @$(foreach os, $(TARGETOS), \
+# 	echo $(os); \
+# )
 
 # 
 # Docker commands
@@ -71,6 +92,7 @@ dive-ci:
 dive:
 	dive ${IMAGE_FULL_NAME}
 
+.PHONY: helm
 helm:
 	helm package ./helm
 
@@ -78,6 +100,5 @@ helm:
 # Misc
 #
 clean:
-	@rm -f kbot
-	@rm -rf build
+	@rm -rf ./build
 	@docker rmi -f ${IMAGE_FULL_NAME}

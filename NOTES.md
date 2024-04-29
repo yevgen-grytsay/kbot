@@ -332,6 +332,27 @@ Allow user jenkins to run docker commands:
 https://docs.docker.com/engine/install/linux-postinstall/
 
 
+## GitLab
+https://docs.gitlab.com/ee/tutorials/create_register_first_runner/index.html
+
+
+You can configure a project, group, or instance CI/CD variable to be available only to pipelines that run on protected branches or protected tags. 
+https://docs.gitlab.com/ee/ci/variables/index.html#protect-a-cicd-variable
+
+
+Configure a list of selectable prefilled variable values
+https://docs.gitlab.com/ee/ci/pipelines/index.html#configure-a-list-of-selectable-prefilled-variable-values
+
+
+https://docs.gitlab.com/ee/ci/docker/using_docker_build.html
+
+
+https://docs.gitlab.com/runner/register/
+
+
+https://docs.gitlab.com/ee/user/packages/container_registry/authenticate_with_container_registry.html
+
+
 ## References
 
 https://docs.github.com/en/actions/deployment/security-hardening-your-deployments/about-security-hardening-with-openid-connect#understanding-the-oidc-token
