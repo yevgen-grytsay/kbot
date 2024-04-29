@@ -6,14 +6,15 @@ TARGETOS?=linux
 # TARGETARCH=$(shell dpkg --print-architecture)
 # TARGETARCH=arm64
 TARGETARCH?=amd64
-ALL_OS = windows darwin linux
 
-
-ifeq ($(TARGETOS),all)
-	TARGETOS=$(ALL_OS)
-endif
-
-build_jobs := $(foreach os,$(TARGETOS),build-$(os)-$(TARGETARCH))
+# ALL_OS = linux darwin windows
+# ifeq ($(TARGETOS),all)
+# 	TARGETOS_LIST=$(ALL_OS)
+# else
+# 	TARGETOS_LIST=$(TARGETOS)
+# endif
+# build_jobs := $(foreach os,$(TARGETOS_LIST),build-$(os)-$(TARGETARCH))
+# TARGETOS := $(firstword $(TARGETOS_LIST))
 
 # Fail fast
 ifndef VERSION_TAG
@@ -24,22 +25,22 @@ ifndef VERSION_REV
 $(error VERSION_TAG is not set)
 endif
 
-# ifndef TARGETOS
-# $(error TARGETOS is not set)
-# endif
+ifndef TARGETOS
+$(error TARGETOS is not set)
+endif
 
 ifndef TARGETARCH
 $(error TARGETARCH is not set)
 endif
 
-VERSION=${VERSION_TAG}-${VERSION_REV}
-IMAGE_FULL_NAME=${REGISTRY}/${IMAGE_NAME}:${VERSION}-${TARGETOS}-${TARGETARCH}
+VERSION=$(VERSION_TAG)-$(VERSION_REV)
+IMAGE_FULL_NAME=$(REGISTRY)/$(IMAGE_NAME):$(VERSION)-$(TARGETOS)-$(TARGETARCH)
 
 .DEFAULT_GOAL=build
 
 
-# format:
-# 	gofmt -s -w ./
+format:
+	gofmt -s -w ./
 
 lint:
 	go vet
@@ -53,21 +54,19 @@ get:
 #
 # Build commands
 #
-# build: format get # temporarily disable
-# build: get
-# 	@echo "Selected OS: ${TARGETOS}"
-# 	@echo "Selected Arch: ${TARGETARCH}"
-# 	for os in ${TARGETOS}; do \
-# 		CGO_ENABLED=0 GOOS=${os} GOARCH=${TARGETARCH} go build -v -o build/${os}-${TARGETARCH}/kbot -ldflags="-X="github.com/yevgen-grytsay/kbot/app.AppVersion=${VERSION}; \
-# 	done
-
-
-build: get
+build: format get
 	@echo "Selected OS: ${TARGETOS}"
 	@echo "Selected Arch: ${TARGETARCH}"
-	$(foreach os, $(TARGETOS), \
-		CGO_ENABLED=0 GOOS=${os} GOARCH=${TARGETARCH} go build -v -o build/${os}-${TARGETARCH}/kbot -ldflags="-X="github.com/yevgen-grytsay/kbot/app.AppVersion=${VERSION}; \
-	)
+	CGO_ENABLED=0 GOOS=${TARGETOS} GOARCH=${TARGETARCH} \
+		go build -v -o kbot \
+		-ldflags="-X="github.com/yevgen-grytsay/kbot/app.AppVersion=${VERSION}
+
+# build: get
+# 	@echo "Selected OS: ${TARGETOS_LIST}"
+# 	@echo "Selected Arch: ${TARGETARCH}"
+# 	$(foreach os, $(TARGETOS_LIST), \
+# 		CGO_ENABLED=0 GOOS=${os} GOARCH=${TARGETARCH} go build -v -o build/${os}-${TARGETARCH}/kbot -ldflags="-X="github.com/yevgen-grytsay/kbot/app.AppVersion=${VERSION}; \
+# 	)
 
 # @$(foreach os, $(TARGETOS), \
 # 	echo $(os); \
@@ -101,6 +100,5 @@ helm:
 # Misc
 #
 clean:
-	@rm -f kbot
-	@rm -rf build
+	@rm -rf ./build
 	@docker rmi -f ${IMAGE_FULL_NAME}

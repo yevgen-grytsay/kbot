@@ -10,14 +10,14 @@ variables:
       - "linux"
       - "darwin"
       - "windows"
-      - "all"
-    description: "Pick OS: `linux`, `darwin`, `windows`, `all`"
+      # - "all"
+    description: "Pick OS"
   ARCH:
     value: "amd64"
     options:
       - "amd64"
       - "arm64"
-    description: "Pick Arch: `amd64`, `arm64`"
+    description: "Pick Arch"
   GO_IMAGE: quay.io/projectquay/golang:1.20
 
 test_job:
@@ -32,6 +32,9 @@ build_job:
   image: $GO_IMAGE
   stage: build
   needs: [test_job]
+  variables:
+    TARGETOS: $OS
+    TARGETARCH: $ARCH
   script:
     - "make build"
 
@@ -51,17 +54,18 @@ image_job:
   script:
     - "make image"
     - "make push"
-
-test_runner_job:
-  stage: build
-  needs: [test_job]
-  tags:
-    - docker
-  variables:
-    TARGETOS: $OS
-    TARGETARCH: $ARCH
-  before_script:
-    - echo $DOCKERHUB_TOKEN | docker login -u $DOCKERHUB_USER --password-stdin
-  script:
-    - "make image"
-    - "make push"
+# Job for testing external runner with Shell executor
+# external_runner_job:
+#   stage: build
+#   when: manual
+#   allow_failure: false
+#   tags:
+#     - ext-docker
+#   variables:
+#     TARGETOS: $OS
+#     TARGETARCH: $ARCH
+#   script:
+#     - echo "TARGETOS=${TARGETOS}"
+#     - echo "TARGETARCH=${TARGETARCH}"
+#     - "make image"
+#     - "make push"
