@@ -17,7 +17,8 @@ func TestEchoCommandHandler(t *testing.T) {
 	message := telebot.Message{Payload: "Hello!"}
 
 	context := mock.NewMockContext(ctrl)
-	context.EXPECT().Message().Return(&message)
+	context.EXPECT().Message().AnyTimes().Return(&message)
+	context.EXPECT().Text().AnyTimes()
 	context.EXPECT().Send("Bot says: Hello!")
 
 	EchoCommandHandler(context)
