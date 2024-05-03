@@ -8,7 +8,7 @@ image:
   repository: yevgen-grytsay
   pullPolicy: IfNotPresent
   # Overrides the image tag whose default is the chart appVersion.
-  tag: "v2.1.0-c95e4d0"
+  tag: "v2.1.0-f91bf07"
   arch: amd64
   os: linux
   # registry: us-central1-docker.pkg.dev
