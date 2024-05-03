@@ -8,6 +8,8 @@ import (
 )
 
 var EchoCommandHandler = func(ctx telebot.Context) error {
+	log.Print(ctx.Message().Payload, ctx.Text())
+
 	payload := ctx.Message().Payload
 	if payload == "" {
 		return nil
