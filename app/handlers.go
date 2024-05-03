@@ -30,3 +30,11 @@ var OnTextCommandHandler = func(ctx telebot.Context) (err error) {
 
 	return err
 }
+
+var VersionCommandHandler = func(ctx telebot.Context) (err error) {
+	log.Printf("Version: %s", AppVersion)
+
+	err = ctx.Send(AppVersion)
+
+	return err
+}

@@ -45,7 +45,9 @@ to quickly create a Cobra application.`,
 		}
 
 		for endpoint, handlerSet := range app.CommandHandlersConfig {
-			kbot.Handle(endpoint, handlerSet.HandlerFunc, handlerSet.MiddlewareFuncList...)
+			for _, alias := range append([]string{endpoint}, handlerSet.Alias...) {
+				kbot.Handle(alias, handlerSet.HandlerFunc, handlerSet.MiddlewareFuncList...)
+			}
 		}
 
 		kbot.Start()
