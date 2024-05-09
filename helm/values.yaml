@@ -17,6 +17,5 @@ secret:
   name: kbot-secret
   tokenKey: token
   tokenName: TELE_TOKEN
-  tokenValue:
 autoscaling:
   enabled: false
