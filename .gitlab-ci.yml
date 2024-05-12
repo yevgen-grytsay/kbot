@@ -33,7 +33,7 @@ secrets-test:
 test_job:
   stage: test
   image: $GO_IMAGE
-  when: manual
+  # when: manual
   allow_failure: false
   script:
     - "make test"
@@ -41,7 +41,7 @@ test_job:
 build_job:
   image: $GO_IMAGE
   stage: build
-  needs: [test_job]
+  # needs: [test_job]
   variables:
     TARGETOS: $OS
     TARGETARCH: $ARCH
@@ -51,7 +51,7 @@ build_job:
 image_job:
   image: docker:26.1.0-cli-alpine3.19
   stage: build
-  needs: [test_job]
+  # needs: [test_job]
   variables:
     TARGETOS: $OS
     TARGETARCH: $ARCH
