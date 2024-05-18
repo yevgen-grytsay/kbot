@@ -14,6 +14,7 @@ image:
   # registry: us-central1-docker.pkg.dev
   # repository: savvy-camp-419217/k8s-k3s
 secret:
+  createManifest: true
   name: kbot-secret
   tokenKey: token
   tokenName: TELE_TOKEN
