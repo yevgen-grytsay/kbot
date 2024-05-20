@@ -48,7 +48,6 @@ func rollDice(bag baggage.Baggage) string {
 	}(ctx)
 	if err != nil {
 		return fmt.Sprintf("Error: %s", err.Error())
-		// log.Println(err)
 	}
 
 	return string(body)
