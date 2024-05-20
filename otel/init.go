@@ -1,13 +1,14 @@
 package otel
 
 import (
+	"context"
 	"log"
 
 	"time"
 
 	"go.opentelemetry.io/otel"
-	"go.opentelemetry.io/otel/exporters/stdout/stdoutmetric"
-	"go.opentelemetry.io/otel/exporters/stdout/stdouttrace"
+	"go.opentelemetry.io/otel/exporters/otlp/otlpmetric/otlpmetrichttp"
+	"go.opentelemetry.io/otel/exporters/otlp/otlptrace/otlptracehttp"
 	"go.opentelemetry.io/otel/propagation"
 	semconv "go.opentelemetry.io/otel/semconv/v1.24.0"
 
@@ -17,12 +18,16 @@ import (
 )
 
 const (
-	OTEL_SERVICE_NAME       = "KbotService"
-	METRICS_EXPORT_INTERVAL = 60 * time.Second
-	TRACS_EXPORT_INTERVAL   = 60 * time.Second
+	OTEL_SERVICE_NAME         = "KbotService"
+	METRICS_EXPORT_INTERVAL   = 60 * time.Second
+	TRACS_EXPORT_INTERVAL     = 60 * time.Second
+	OTLP_METRIC_HTTP_ENDPOINT = "http://collector:3030"
+	OTLP_TRACE_HTTP_ENDPOINT  = "http://collector:3030"
 )
 
 func InitTracer(appVersion string) (*sdktrace.TracerProvider, *sdkmetric.MeterProvider) {
+	ctx := context.Background()
+
 	resource, err := resource.Merge(
 		resource.Default(),
 		resource.NewWithAttributes(
@@ -35,7 +40,8 @@ func InitTracer(appVersion string) (*sdktrace.TracerProvider, *sdkmetric.MeterPr
 		log.Fatal(err)
 	}
 
-	metricsExporter, err := stdoutmetric.New(stdoutmetric.WithPrettyPrint())
+	// metricsExporter, err := stdoutmetric.New(stdoutmetric.WithPrettyPrint())
+	metricsExporter, err := otlpmetrichttp.New(ctx, otlpmetrichttp.WithEndpointURL(OTLP_METRIC_HTTP_ENDPOINT))
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -45,7 +51,8 @@ func InitTracer(appVersion string) (*sdktrace.TracerProvider, *sdkmetric.MeterPr
 		sdkmetric.WithResource(resource),
 	)
 
-	traceExporter, err := stdouttrace.New(stdouttrace.WithPrettyPrint())
+	// traceExporter, err := stdouttrace.New(stdouttrace.WithPrettyPrint())
+	traceExporter, err := otlptracehttp.New(ctx, otlptracehttp.WithEndpointURL(OTLP_TRACE_HTTP_ENDPOINT))
 	if err != nil {
 		log.Fatal(err)
 	}
