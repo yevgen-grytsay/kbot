@@ -2,7 +2,6 @@ package app
 
 import (
 	"context"
-	"flag"
 	"fmt"
 	"io"
 	"net/http"
@@ -25,9 +24,6 @@ func RollDice(username string) string {
 }
 
 func rollDice(bag baggage.Baggage) string {
-	url := flag.String("server", SERVER_URL, "server url")
-	flag.Parse()
-
 	client := http.Client{Transport: otelhttp.NewTransport(http.DefaultTransport)}
 
 	ctx := baggage.ContextWithBaggage(context.Background(), bag)
@@ -38,7 +34,7 @@ func rollDice(bag baggage.Baggage) string {
 	err := func(ctx context.Context) error {
 		ctx, span := tr.Start(ctx, "roll dice", trace.WithAttributes(semconv.PeerService("RollDiceService")))
 		defer span.End()
-		req, _ := http.NewRequestWithContext(ctx, "GET", *url, nil)
+		req, _ := http.NewRequestWithContext(ctx, "GET", SERVER_URL, nil)
 
 		fmt.Printf("Sending request...\n")
 		res, err := client.Do(req)
