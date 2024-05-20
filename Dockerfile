@@ -1,4 +1,4 @@
-FROM quay.io/projectquay/golang:1.20 as builder
+FROM quay.io/projectquay/golang:1.21 as builder
 
 ARG TARGETOS
 ARG TARGETARCH
