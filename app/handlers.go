@@ -18,6 +18,14 @@ var EchoCommandHandler = func(ctx telebot.Context) error {
 	return ctx.Send(fmt.Sprintf("Bot says: %s", payload))
 }
 
+var RollDiceCommandHandler = func(ctx telebot.Context) error {
+	log.Print(ctx.Message().Payload, ctx.Text())
+
+	result := RollDice(ctx.Sender().Username)
+
+	return ctx.Send(result)
+}
+
 var OnTextCommandHandler = func(ctx telebot.Context) (err error) {
 
 	log.Print(ctx.Message().Payload, ctx.Text())

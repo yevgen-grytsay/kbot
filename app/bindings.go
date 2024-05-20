@@ -18,6 +18,10 @@ var CommandHandlersConfig = map[string]HandlerSet{
 		HandlerFunc: VersionCommandHandler,
 		Alias:       []string{"/ver", "/v"},
 	},
+	"/rolldice": {
+		HandlerFunc: RollDiceCommandHandler,
+		Alias:       []string{"/roll", "/rd"},
+	},
 	telebot.OnText: {
 		HandlerFunc: OnTextCommandHandler,
 	},
