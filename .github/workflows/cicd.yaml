@@ -58,13 +58,19 @@ jobs:
 
       - run: echo "VERSION=$(git describe --tags --abbrev=0)-$(git rev-parse --short HEAD)" >> "$GITHUB_ENV"
 
+      - run: echo "APP_VERSION=$(git describe --tags --abbrev=0 | tr -d "v")" >> "$GITHUB_ENV"
+
       - uses: mikefarah/yq@v4.43.1
         with:
           cmd: yq -i '.image.tag=strenv(VERSION)' helm/values.yaml
 
+      - uses: mikefarah/yq@v4.43.1
+        with:
+          cmd: yq -i '.appVersion=strenv(APP_VERSION)' helm/Chart.yaml
+
       - run: |
           git config user.name "${GITHUB_ACTOR}"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add helm/values.yaml
+          git add helm/values.yaml helm/Chart.yaml
           git commit -am "update version $VERSION"
           git push
