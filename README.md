@@ -5,6 +5,8 @@ Link [yevhenhrytsai_bot](https://t.me/yevhenhrytsai_bot)
 Commands:
 - `/start hello`
 - `/echo <message>`
+- `/version`, `/ver`, `/v` -- отримати версію додатку
+- `/rolldice`, `/roll`, `/rd` -- згенерувати випадкове ціле число в діапазоні [1, 6]. Бот не сам генерує число, а звертається до сервіса [otel-dice-server](https://github.com/yevgen-grytsay/otel-dice-server). Ця команда створена для того, щоб тестувати комунікацію між сервісами, а також трейсинг та метрики.
 
 
 ## CI/CD Workflow
