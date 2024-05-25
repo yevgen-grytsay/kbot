@@ -11,8 +11,6 @@ metadata:
   labels:
     name: kbot
 spec:
-  destination:
-    namespace: {{ .Values.app.namespace }}
   project: default
 
   # Source of the application manifests

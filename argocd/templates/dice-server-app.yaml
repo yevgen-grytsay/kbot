@@ -11,8 +11,6 @@ metadata:
   labels:
     name: otel-dice-server
 spec:
-  destination:
-    namespace: {{ .Values.app.namespace }}
   project: default
 
   # Source of the application manifests
