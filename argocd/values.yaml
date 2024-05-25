@@ -8,8 +8,8 @@ app:
   repoURL: https://github.com/yevgen-grytsay/kbot
   targetRevision: argocd # targetRevision: Revision (tag/branch/commit) of the repository (eg HEAD)
   # namespace: kbot-argocd
-  # destination:
-  #   server: https://kubernetes.default.svc
+  destination:
+    server: null
 # image:
 #   repository: nginx
 #   pullPolicy: IfNotPresent

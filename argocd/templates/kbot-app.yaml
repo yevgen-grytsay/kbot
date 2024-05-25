@@ -12,7 +12,8 @@ metadata:
     name: kbot
 spec:
   project: default
-
+  destination:
+    server: {{ .Values.app.destination.server }}
   # Source of the application manifests
   source:
     repoURL: {{ .Values.app.repoURL }}  # Can point to either a Helm chart repo or a git repo.

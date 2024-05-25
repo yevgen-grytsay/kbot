@@ -12,7 +12,8 @@ metadata:
     name: otel-dice-server
 spec:
   project: default
-
+  destination:
+    server: {{ .Values.app.destination.server }}
   # Source of the application manifests
   source:
     repoURL: https://github.com/yevgen-grytsay/otel-dice-server
