@@ -32,11 +32,6 @@ spec:
       {{- end }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
-      volumes:
-        - hostPath:
-            path: /dev/mem
-            type: ""
-          name: dev-mem
       containers:
         - name: {{ .Release.Name }}
           securityContext:
@@ -45,9 +40,6 @@ spec:
           # args: ["start"]
           command: ["./kbot", "start"]
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          volumeMounts:
-            - mountPath: /dev/mem
-              name: dev-mem
           env:
             - name: {{ .Values.secret.tokenName }}
               valueFrom:
