@@ -365,3 +365,44 @@ https://github.com/google-github-actions/auth/blob/main/docs/SECURITY_CONSIDERAT
 
 
 https://cloud.google.com/iam/docs/overview?hl=en
+
+
+## ArgoCD app of apps
+Аплікейшени мають бути на control-кластері, тобто на тому кластері, де встановлений ArgoCD.
+Тому при створенні аплікейшену я вказував саме control-кластер `--dest-server https://kubernetes.default.svc`.
+Інакше команда `argocd app create` буде ругатись, що у кластері немає Application CRD.
+
+### TODO
+- Розібратися, чому неймспейс на доданому кластері не створюється автоматично. Або просто створити його через маніфест і не паритись.
+- Треба вирішити питання, як організувати аплікейшени у проєктах/неймспейсах, щоб не було конфліктів імен. Що використовувати для цього -- неймспейси чи проєкті?
+- Розібратися з проєктами. Чи буде від них користь для наших задач.
+
+```sh
+ssh dell-1@192.168.1.119 microk8s config > dell-1-config
+
+$ argocd cluster add microk8s \
+    --name dell-1-cluster \
+    --kubeconfig ./dell-1-config
+
+APP_REV=$(git rev-parse --short HEAD)
+
+# argocd proj create "preview-$APP_REV" \
+#     --dest https://kubernetes.default.svc,default
+
+# Чомусь на доданому кластері не створюється автоматично неймспейс
+kubectl create ns argocd
+
+read -s TELE_TOKEN
+export TELE_TOKEN
+kubectl create secret generic kbot-secret --from-literal=token="$TELE_TOKEN" -n argocd
+
+argocd app create "kbot-app-$APP_REV" \
+    --repo https://github.com/yevgen-grytsay/kbot \
+    --revision argocd \
+    --path argocd  \
+    --dest-server https://kubernetes.default.svc \
+    --helm-set app.destination.server=https://192.168.1.119:16443
+    # --project "preview-$APP_REV"
+
+argocd app sync "kbot-app-$APP_REV"
+```
