@@ -15,7 +15,6 @@ metadata:
 spec:
   destination:
     namespace: {{ .Values.app.namespace }}
-    # server: {{ .Values.app.destination.server }}
   project: default
 
   # Source of the application manifests
