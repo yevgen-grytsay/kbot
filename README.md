@@ -62,7 +62,7 @@ make test
 - [Publishing and installing a package with GitHub Actions](https://docs.github.com/en/packages/managing-github-packages-using-github-actions-workflows/publishing-and-installing-a-package-with-github-actions)
 
 
-### ArgoC
+### ArgoCD
 - [Automated Sync Policy](https://argo-cd.readthedocs.io/en/stable/user-guide/auto_sync/#automated-sync-policy)
 
 ### GNU make
